@@ -3,6 +3,7 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 // Utiles
 import connectDB from "./config/db.js";
@@ -13,11 +14,25 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 connectDB();
 
 const app = express();
+
+// Enable CORS
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "http://127.0.0.1:5173",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,6 +49,6 @@ app.get("/api/config/paypal", (req, res) => {
 });
 
 const __dirname = path.resolve();
-app.use("/uploads", express.static(path.join(__dirname + "/uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.listen(port, () => console.log(`Server running on port: ${port}`));

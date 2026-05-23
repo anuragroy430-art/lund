@@ -16,7 +16,7 @@ const Home = () => {
         <Loader />
       ) : isError ? (
         <Message variant="danger">
-          {isError?.data.message || isError.error}
+          {isError?.data?.message || isError?.error || "An error occurred"}
         </Message>
       ) : (
         <>
@@ -35,11 +35,13 @@ const Home = () => {
 
           <div>
             <div className="flex justify-center flex-wrap mt-[2rem]">
-              {data.products.map((product) => (
-                <div key={product._id}>
-                  <Product product={product} />
-                </div>
-              ))}
+              {data &&
+                data.products &&
+                data.products.map((product) => (
+                  <div key={product._id}>
+                    <Product product={product} />
+                  </div>
+                ))}
             </div>
           </div>
         </>
