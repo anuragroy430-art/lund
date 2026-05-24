@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Messsage from "../../components/Message";
+import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import {
   useDeliverOrderMutation,
@@ -87,16 +87,36 @@ const Order = () => {
     refetch();
   };
 
+  const testPayHandler = async () => {
+    try {
+      await payOrder({
+        orderId,
+        details: {
+          id: `MOCK_PAYMENT_${Date.now()}`,
+          status: "COMPLETED",
+          update_time: new Date().toISOString(),
+          payer: { email_address: userInfo.email },
+        },
+      });
+      refetch();
+      toast.success("Mock Payment Successful");
+    } catch (error) {
+      toast.error(error?.data?.message || error.message);
+    }
+  };
+
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Messsage variant="danger">{error.data.message}</Messsage>
+    <Message variant="danger">
+      {error?.data?.message || error.error || "An error occurred"}
+    </Message>
   ) : (
     <div className="container flex flex-col ml-[10rem] md:flex-row">
       <div className="md:w-2/3 pr-4">
         <div className="border gray-300 mt-5 pb-4 mb-5">
           {order.orderItems.length === 0 ? (
-            <Messsage>Order is empty</Messsage>
+            <Message>Order is empty</Message>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-[80%]">
@@ -167,9 +187,9 @@ const Order = () => {
           </p>
 
           {order.isPaid ? (
-            <Messsage variant="success">Paid on {order.paidAt}</Messsage>
+            <Message variant="success">Paid on {order.paidAt}</Message>
           ) : (
-            <Messsage variant="danger">Not paid</Messsage>
+            <Message variant="danger">Not paid</Message>
           )}
         </div>
 
@@ -207,6 +227,13 @@ const Order = () => {
                 </div>
               </div>
             )}
+            <button
+              type="button"
+              className="bg-pink-500 text-white w-full py-2 mt-4 hover:bg-pink-600 transition-colors font-bold uppercase tracking-wider"
+              onClick={testPayHandler}
+            >
+              Mock Pay (Test)
+            </button>
           </div>
         )}
 

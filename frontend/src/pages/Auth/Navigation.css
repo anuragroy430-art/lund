@@ -1,36 +1,78 @@
 #navigation-container {
-  width: 4%;
-  transition: width 0.3s ease-in-out;
-  overflow: hidden; /* Hide overflowing content during transition */
+  width: 75px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
 }
 
 #navigation-container:hover {
-  width: 15%;
+  width: 260px;
 }
 
-/* Initially hide nav-item-name */
 .nav-item-name {
-  display: none;
-  transition: opacity 0.2s ease-in-out; /* Add opacity transition */
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.3s ease;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
 }
 
 #navigation-container:hover .nav-item-name {
-  display: block;
   opacity: 1;
 }
 
-.search-input {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out; /* Add opacity transition */
+.glass-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  margin: 0.25rem 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
 }
 
-#navigation-container:hover .search-input {
+.glass-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.glass-nav-item.active {
+  background: rgba(236, 72, 153, 0.1);
+  color: #ec4899;
+}
+
+.glass-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 3px;
+  background: #ec4899;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 10px #ec4899;
+}
+
+/* User Dropdown Item */
+.dropdown-item {
   display: block;
-  opacity: 1;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  border-radius: 0.75rem;
 }
 
-#navigation-container:hover .search-icon {
-  display: none;
-  transition: opacity 0.2s ease-in-out; /* Add opacity transition */
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding-left: 1.25rem;
 }

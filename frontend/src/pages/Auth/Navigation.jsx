@@ -6,8 +6,8 @@ import {
   AiOutlineUserAdd,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
-import { FaHeart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaHeart, FaChevronRight } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Navigation.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +18,7 @@ import FavoritesCount from "../Products/FavoritesCount";
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.cart);
+  const location = useLocation();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -41,177 +42,150 @@ const Navigation = () => {
     }
   };
 
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div
       style={{ zIndex: 9999 }}
       className={`${
         showSidebar ? "hidden" : "flex"
-      } xl:flex lg:flex md:hidden sm:hidden flex-col justify-between p-4 text-white bg-[#000] w-[4%] hover:w-[15%] h-[100vh]  fixed `}
+      } xl:flex lg:flex md:hidden sm:hidden flex-col justify-between p-2 text-white bg-[#0f0f10]/80 backdrop-blur-2xl border-r border-white/5 fixed h-[100vh] shadow-2xl transition-all duration-300 group`}
       id="navigation-container"
     >
-      <div className="flex flex-col justify-center space-y-4">
+      <div className="flex flex-col space-y-2 pt-8">
         <Link
           to="/"
-          className="flex items-center transition-transform transform hover:translate-x-2"
+          className={`glass-nav-item ${isActive("/") ? "active" : ""}`}
         >
-          <AiOutlineHome className="mr-2 mt-[3rem]" size={26} />
-          <span className="hidden nav-item-name mt-[3rem]">HOME</span>{" "}
+          <AiOutlineHome size={22} className="min-w-[26px]" />
+          <span className="nav-item-name ml-4">Dashboard</span>
         </Link>
 
         <Link
           to="/shop"
-          className="flex items-center transition-transform transform hover:translate-x-2"
+          className={`glass-nav-item ${isActive("/shop") ? "active" : ""}`}
         >
-          <AiOutlineShopping className="mr-2 mt-[3rem]" size={26} />
-          <span className="hidden nav-item-name mt-[3rem]">SHOP</span>{" "}
+          <AiOutlineShopping size={22} className="min-w-[26px]" />
+          <span className="nav-item-name ml-4">Browse Store</span>
         </Link>
 
-        <Link to="/cart" className="flex relative">
-          <div className="flex items-center transition-transform transform hover:translate-x-2">
-            <AiOutlineShoppingCart className="mt-[3rem] mr-2" size={26} />
-            <span className="hidden nav-item-name mt-[3rem]">Cart</span>{" "}
+        <Link
+          to="/cart"
+          className={`glass-nav-item relative ${isActive("/cart") ? "active" : ""}`}
+        >
+          <div className="flex items-center">
+            <AiOutlineShoppingCart size={22} className="min-w-[26px]" />
+            <span className="nav-item-name ml-4">Cart View</span>
           </div>
 
-          <div className="absolute top-9">
-            {cartItems.length > 0 && (
-              <span>
-                <span className="px-1 py-0 text-sm text-white bg-pink-500 rounded-full">
-                  {cartItems.reduce((a, c) => a + c.qty, 0)}
-                </span>
+          {cartItems.length > 0 && (
+            <div className="absolute top-2 left-6">
+              <span className="px-1.5 py-0.5 text-[10px] font-black text-white bg-pink-600 rounded-full shadow-lg ring-2 ring-[#0f0f10]">
+                {cartItems.reduce((a, c) => a + c.qty, 0)}
               </span>
-            )}
-          </div>
+            </div>
+          )}
         </Link>
 
-        <Link to="/favorite" className="flex relative">
-          <div className="flex justify-center items-center transition-transform transform hover:translate-x-2">
-            <FaHeart className="mt-[3rem] mr-2" size={20} />
-            <span className="hidden nav-item-name mt-[3rem]">
-              Favorites
-            </span>{" "}
+        <Link
+          to="/favorite"
+          className={`glass-nav-item relative ${isActive("/favorite") ? "active" : ""}`}
+        >
+          <div className="flex items-center">
+            <FaHeart size={20} className="min-w-[26px]" />
+            <span className="nav-item-name ml-4">Wishlist</span>
             <FavoritesCount />
           </div>
         </Link>
       </div>
 
-      <div className="relative">
-        <button
-          onClick={toggleDropdown}
-          className="flex items-center text-gray-800 focus:outline-none"
-        >
+      <div className="pb-8 px-4">
+        <div className="relative">
           {userInfo ? (
-            <span className="text-white">{userInfo.username}</span>
-          ) : (
-            <></>
-          )}
-          {userInfo && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-4 w-4 ml-1 ${
-                dropdownOpen ? "transform rotate-180" : ""
-              }`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="white"
+            <button
+              onClick={toggleDropdown}
+              className="flex items-center w-full p-3 glass-container !bg-white/5 hover:!bg-white/10 !rounded-2xl transition-all border-white/5 overflow-hidden"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d={dropdownOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
-              />
-            </svg>
-          )}
-        </button>
-
-        {dropdownOpen && userInfo && (
-          <ul
-            className={`absolute right-0 mt-2 mr-14 space-y-2 bg-white text-gray-600 ${
-              !userInfo.isAdmin ? "-top-20" : "-top-80"
-            } `}
-          >
-            {userInfo.isAdmin && (
-              <>
-                <li>
-                  <Link
-                    to="/admin/dashboard"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/productlist"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    Products
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/categorylist"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    Category
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/orderlist"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    Orders
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/admin/userlist"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                  >
-                    Users
-                  </Link>
-                </li>
-              </>
-            )}
-
-            <li>
-              <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">
-                Profile
-              </Link>
-            </li>
-            <li>
-              <button
-                onClick={logoutHandler}
-                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-              >
-                Logout
-              </button>
-            </li>
-          </ul>
-        )}
-        {!userInfo && (
-          <ul>
-            <li>
+              <div className="min-w-8 h-8 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-xs font-black shadow-lg">
+                {userInfo.username.charAt(0).toUpperCase()}
+              </div>
+              <div className="nav-item-name ml-3 flex-1 flex justify-between items-center overflow-hidden">
+                <span className="truncate text-xs font-bold text-white/80">
+                  {userInfo.username}
+                </span>
+                <FaChevronRight
+                  className={`text-[10px] text-white/40 transition-transform ${dropdownOpen ? "rotate-90" : ""}`}
+                />
+              </div>
+            </button>
+          ) : (
+            <div className="space-y-4">
               <Link
                 to="/login"
-                className="flex items-center mt-5 transition-transform transform hover:translate-x-2"
+                className="glass-nav-item !p-3 !bg-pink-600/10 hover:!bg-pink-600/20 !text-pink-500"
               >
-                <AiOutlineLogin className="mr-2 mt-[4px]" size={26} />
-                <span className="hidden nav-item-name">LOGIN</span>
+                <AiOutlineLogin size={22} className="min-w-[26px]" />
+                <span className="nav-item-name ml-4 font-black">Login</span>
               </Link>
-            </li>
-            <li>
-              <Link
-                to="/register"
-                className="flex items-center mt-5 transition-transform transform hover:translate-x-2"
-              >
-                <AiOutlineUserAdd size={26} />
-                <span className="hidden nav-item-name">REGISTER</span>
+              <Link to="/register" className="glass-nav-item !p-3">
+                <AiOutlineUserAdd size={22} className="min-w-[26px]" />
+                <span className="nav-item-name ml-4">Sign Up</span>
               </Link>
-            </li>
-          </ul>
-        )}
+            </div>
+          )}
+
+          {dropdownOpen && userInfo && (
+            <ul className="absolute bottom-full left-0 mb-4 w-56 glass-container !bg-black/90 !backdrop-blur-3xl !p-2 !rounded-2xl border-white/10 shadow-3xl animate-in slide-in-from-bottom-2 duration-300">
+              {userInfo.isAdmin && (
+                <>
+                  <li className="mb-1">
+                    <Link to="/admin/dashboard" className="dropdown-item">
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li className="mb-1">
+                    <Link to="/admin/productlist" className="dropdown-item">
+                      Inventory
+                    </Link>
+                  </li>
+                  <li className="mb-1">
+                    <Link to="/admin/categorylist" className="dropdown-item">
+                      Categories
+                    </Link>
+                  </li>
+                  <li className="mb-1 border-b border-white/5 pb-1">
+                    <Link to="/admin/orderlist" className="dropdown-item">
+                      All Orders
+                    </Link>
+                  </li>
+                  <li className="mb-1">
+                    <Link to="/admin/userlist" className="dropdown-item">
+                      Users
+                    </Link>
+                  </li>
+                </>
+              )}
+              <li className="mt-1">
+                <Link to="/profile" className="dropdown-item">
+                  My Account
+                </Link>
+              </li>
+              <li className="mb-1">
+                <Link to="/user-orders" className="dropdown-item">
+                  My Orders
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={logoutHandler}
+                  className="dropdown-item !text-red-400 hover:!bg-red-500/10"
+                >
+                  Secure Logout
+                </button>
+              </li>
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );

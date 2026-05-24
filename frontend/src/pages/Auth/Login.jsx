@@ -40,40 +40,42 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <section className="pl-[10rem] flex flex-wrap">
-        <div className="mr-[4rem] mt-[5rem]">
-          <h1 className="text-2xl font-semibold mb-4">Sign In</h1>
+    <div className="flex justify-center items-center h-screen">
+      <section className="glass-container p-10 w-full max-w-md animate-in fade-in zoom-in duration-300">
+        <div className="">
+          <h1 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-pink-500 to-blue-500 bg-clip-text text-transparent">
+            Welcome Back
+          </h1>
 
-          <form onSubmit={submitHandler} className="container w-[40rem]">
-            <div className="my-[2rem]">
+          <form onSubmit={submitHandler} className="space-y-6">
+            <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-white"
+                className="block text-sm font-semibold text-gray-300 mb-2"
               >
                 Email Address
               </label>
               <input
                 type="email"
                 id="email"
-                className="mt-1 p-2 border rounded w-full"
+                className="glass-input w-full"
                 placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-            <div className="mb-4">
+            <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-white"
+                className="block text-sm font-semibold text-gray-300 mb-2"
               >
                 Password
               </label>
               <input
                 type="password"
                 id="password"
-                className="mt-1 p-2 border rounded w-full"
+                className="glass-input w-full"
                 placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -83,7 +85,7 @@ const Login = () => {
             <button
               disabled={isLoading}
               type="submit"
-              className="bg-pink-500 text-white px-4 py-2 rounded cursor-pointer my-[1rem]"
+              className="glass-button w-full mt-4"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
@@ -91,23 +93,18 @@ const Login = () => {
             {isLoading && <Loader />}
           </form>
 
-          <div className="mt-4">
-            <p className="text-white">
+          <div className="mt-6 text-center">
+            <p className="text-gray-400">
               New Customer?{" "}
               <Link
                 to={redirect ? `/register?redirect=${redirect}` : "/register"}
-                className="text-pink-500 hover:underline"
+                className="text-pink-500 hover:text-pink-400 font-bold transition-colors"
               >
                 Register
               </Link>
             </p>
           </div>
         </div>
-        <img
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80"
-          alt=""
-          className="h-[65rem] w-[59%] xl:block md:hidden sm:hidden rounded-lg"
-        />
       </section>
     </div>
   );

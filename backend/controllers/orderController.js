@@ -5,7 +5,7 @@ import Product from "../models/productModel.js";
 function calcPrices(orderItems) {
   const itemsPrice = orderItems.reduce(
     (acc, item) => acc + item.price * item.qty,
-    0
+    0,
   );
 
   const shippingPrice = itemsPrice > 100 ? 0 : 10;
@@ -41,7 +41,7 @@ const createOrder = async (req, res) => {
 
     const dbOrderItems = orderItems.map((itemFromClient) => {
       const matchingItemFromDB = itemsFromDB.find(
-        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
+        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id,
       );
 
       if (!matchingItemFromDB) {
@@ -115,7 +115,7 @@ const calculateTotalSales = async (req, res) => {
   }
 };
 
-const calcualteTotalSalesByDate = async (req, res) => {
+const calculateTotalSalesByDate = async (req, res) => {
   try {
     const salesByDate = await Order.aggregate([
       {
@@ -143,7 +143,7 @@ const findOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate(
       "user",
-      "username email"
+      "username email",
     );
 
     if (order) {
@@ -207,7 +207,7 @@ export {
   getUserOrders,
   countTotalOrders,
   calculateTotalSales,
-  calcualteTotalSalesByDate,
+  calculateTotalSalesByDate,
   findOrderById,
   markOrderAsPaid,
   markOrderAsDelivered,
